@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>事件倒數計時器</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      /*background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);*/
+      background-image: url('哈帕迪.webp');
+      background-size: cover;          /* 圖片填滿整個螢幕 */
+      background-position: center;     /* 置中 */
+      background-repeat: no-repeat;    /* 不重複 */
+      background-attachment: fixed;    /* 滾動時背景固定（視覺更酷） */
+      color: white;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin: 0 0 2rem 0;
+      text-shadow: 0 0 20px rgba(255,255,255,0.4);
+      letter-spacing: 4px;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .box {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 20px 30px;
+      min-width: 110px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+    }
+
+    .box:hover {
+      transform: translateY(-8px);
+    }
+
+    .number {
+      font-size: 4.5rem;
+      font-weight: bold;
+      line-height: 1;
+      margin: 0 0 8px 0;
+      color: #00d4ff;
+      text-shadow: 0 0 30px rgba(0,212,255,0.6);
+    }
+
+    .label {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .message {
+      margin-top: 3rem;
+      font-size: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);   /* 黑色半透明遮罩，0.35~0.55 之間調整 */
+      z-index: -1;                       /* 放在最底層 */
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-overlay"></div>   <!-- 半透明遮罩 讓文字更清晰可讀 -->
+
+  <h1>距離S4賽季還剩下</h1>
+
+  <div class="countdown" id="countdown">
+    <div class="box">
+      <div class="number" id="days">00</div>
+      <div class="label">天</div>
+    </div>
+    <div class="box">
+      <div class="number" id="hours">00</div>
+      <div class="label">小時</div>
+    </div>
+    <div class="box">
+      <div class="number" id="minutes">00</div>
+      <div class="label">分鐘</div>
+    </div>
+    <div class="box">
+      <div class="number" id="seconds">00</div>
+      <div class="label">秒</div>
+    </div>
+  </div>
+
+  <div class="message" id="message">哈帕迪歡迎你的到來！🎉</div>
+
+  <script>
+    // 修改這個時間為你想要倒數的目標時間
+    // 格式：YYYY-MM-DDTHH:mm:ss (24小時制)
+    const targetDate = "2026-03-26T23:59:59";
+
+    const targetTime = new Date(targetDate).getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetTime - now;
+
+      if (distance <= 0) {
+        document.getElementById("countdown").innerHTML = 
+          "<h2 style='font-size:5rem;margin:0;'>歡迎來到哈帕迪!</h2>";
+        document.getElementById("message").style.display = "none";
+        clearInterval(timer);
+        return;
+      }
+
+      const days    = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours   = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("days").textContent    = String(days).padStart(2, "0");
+      document.getElementById("hours").textContent   = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    // 立即執行一次 + 每秒更新
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+  </script>
+
+</body>
+</html>
